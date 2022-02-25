@@ -7,6 +7,9 @@ import {
   Mesh,
 } from "three";
 
+// TODO: use aliases
+import { createGridMesh } from "./grid";
+
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const scene = new Scene();
@@ -22,10 +25,8 @@ const renderer = new WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new BoxGeometry();
-const material = new MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new Mesh(geometry, material);
-scene.add(cube);
+const mesh = createGridMesh(32, 32, 64);
+scene.add(mesh);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
