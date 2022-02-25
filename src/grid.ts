@@ -1,5 +1,6 @@
 import { PlaneGeometry, MeshBasicMaterial, DoubleSide, Mesh } from "three";
 
+// TODO: check center
 export function createGridMesh(
   width: number,
   height: number,

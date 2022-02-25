@@ -27,21 +27,8 @@ module.exports = {
     alias: {
       assets: path.resolve(__dirname, "assets/"),
       "boucaud-technical-test": path.resolve(__dirname, "src/"),
+      three: path.resolve('./node_modules/three')
     },
     extensions: [".tsx", ".ts", ".js"],
   },
-  // See: https://github.com/mrdoob/three.js/issues/17482#issuecomment-780920930 TODO: unnecessary if no examples are used. Required for controls right now.
-  externals: [
-    ({ context, request }, callback) => {
-      if (request === "three" || request.endsWith("three.module.js")) {
-        return callback(null, {
-          commonjs: "three",
-          commonjs2: "three",
-          amd: "three",
-          root: "THREE",
-        });
-      }
-      callback();
-    },
-  ],
 };

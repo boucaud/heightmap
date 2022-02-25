@@ -2,9 +2,6 @@ import {
   Scene,
   PerspectiveCamera,
   WebGLRenderer,
-  BoxGeometry,
-  MeshBasicMaterial,
-  Mesh,
 } from "three";
 
 // TODO: use aliases
@@ -30,7 +27,7 @@ scene.add(mesh);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
-camera.position.z = 5;
+camera.position.z = 100;
 
 function animate() {
   requestAnimationFrame(animate);
