@@ -27,6 +27,8 @@ load()
   .catch((error: ErrorEvent) => {
     // Report the error to the user
     const p = document.createElement("p");
-    p.textContent = `Failed to load textures. ${error.message || error.error || ''}`;
+    p.textContent = `Failed to load textures. ${
+      error.message || error.error || ""
+    }`;
     document.body.appendChild(p);
   });

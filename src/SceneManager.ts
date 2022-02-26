@@ -1,9 +1,4 @@
-import {
-  Scene,
-  PerspectiveCamera,
-  WebGLRenderer,
-  Color
-} from "three";
+import { Scene, PerspectiveCamera, WebGLRenderer, Color } from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
@@ -13,7 +8,7 @@ export class SceneManager {
   private scene: Scene;
   private camera: PerspectiveCamera;
   private renderer: WebGLRenderer;
-  private controls: OrbitControls;
+  private orbitControls: OrbitControls;
 
   private canvas: HTMLCanvasElement;
 
@@ -28,7 +23,7 @@ export class SceneManager {
     this.scene = this.buildScene();
     this.camera = this.buildCamera();
     this.renderer = this.buildRenderer();
-    this.controls = this.buildControls();
+    this.orbitControls = this.buildControls();
     this.buildEntities();
   }
 
@@ -39,13 +34,17 @@ export class SceneManager {
   }
 
   buildRenderer() {
-    const renderer = new WebGLRenderer({ canvas: this.canvas, antialias: true, alpha: true });
+    const renderer = new WebGLRenderer({
+      canvas: this.canvas,
+      antialias: true,
+      alpha: true,
+    });
     renderer.setPixelRatio(window.devicePixelRatio || 1);
     renderer.setSize(this.width, this.height);
     return renderer;
   }
 
-  buildCamera() : PerspectiveCamera {
+  buildCamera(): PerspectiveCamera {
     const camera = new PerspectiveCamera(
       75,
       this.width / this.height,
@@ -63,7 +62,7 @@ export class SceneManager {
 
   buildControls() {
     const controls = new OrbitControls(this.camera, this.renderer.domElement);
-    controls.addEventListener('change', () => this.update());
+    controls.addEventListener("change", () => this.update());
     return controls;
   }
 
