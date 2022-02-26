@@ -7,18 +7,18 @@ import {
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-import { createGridMesh } from "./grid";
+import { Map } from "./entities/Map";
 
 export class SceneManager {
-  scene: Scene;
-  camera: PerspectiveCamera;
-  renderer: WebGLRenderer;
-  controls: OrbitControls;
+  private scene: Scene;
+  private camera: PerspectiveCamera;
+  private renderer: WebGLRenderer;
+  private controls: OrbitControls;
 
-  canvas: HTMLCanvasElement;
+  private canvas: HTMLCanvasElement;
 
-  width: number;
-  height: number;
+  private width: number;
+  private height: number;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -57,8 +57,8 @@ export class SceneManager {
   }
 
   buildEntities() {
-    const mesh = createGridMesh(32, 32, 64);
-    this.scene.add(mesh);
+    const map = new Map();
+    this.scene.add(map);
   }
 
   buildControls() {
