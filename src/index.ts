@@ -1,38 +1,15 @@
-import {
-  Scene,
-  PerspectiveCamera,
-  WebGLRenderer,
-} from "three";
+import { SceneManager } from "./SceneManager";
 
-// TODO: use aliases
-import { createGridMesh } from "./grid";
+const canvas = document.createElement('canvas');
 
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-const scene = new Scene();
+const sceneManager = new SceneManager(canvas);
 
-const camera = new PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
+window.onresize = () => sceneManager.onResize();
 
-const renderer = new WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+document.body.appendChild(canvas);
 
-const mesh = createGridMesh(32, 32, 64);
-scene.add(mesh);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-
-camera.position.z = 100;
-
-function animate() {
-  requestAnimationFrame(animate);
-  controls.update();
-  renderer.render(scene, camera);
-}
-
-animate();
+// Trigger the first render
+sceneManager.update();
