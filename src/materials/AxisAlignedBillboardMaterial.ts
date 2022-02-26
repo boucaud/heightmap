@@ -1,4 +1,4 @@
-import { DoubleSide, Texture, ShaderMaterial, Vector3 } from "three";
+import { DoubleSide, Texture, ShaderMaterial, Color } from "three";
 
 import { textures } from "../TextureManager";
 
@@ -18,11 +18,11 @@ const vs = `
 const fs = `
   varying vec2 vUV;
   uniform sampler2D pinTexture;
-  uniform vec3 alphaColor;
+  uniform vec3 color;
 
   void main() {
-    vec4 color = texture2D(pinTexture, vUV);
-    gl_FragColor = color;
+    vec4 textureColor = texture2D(pinTexture, vUV) * vec4(color.rgb, 1.0);
+    gl_FragColor = textureColor;
   }
 `;
 
@@ -31,7 +31,7 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
   pinTexture: Texture;
   heightMapTexture: Texture;
 
-  constructor() {
+  constructor(color: Color, scale: number) {
     super({
       side: DoubleSide,
       depthTest: false, // Always in front of the map
@@ -43,9 +43,9 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
     this.pinTexture = textures.pinTexture as Texture;
     this.heightMapTexture = textures.heightMapTexture as Texture;
     this.uniforms = {
-      gridLength: { value: 0.1 },
+      gridLength: { value: scale },
       pinTexture: { value: this.pinTexture },
-      alphaColor: { value: new Vector3(1.0, 1.0, 1.0) },
+      color: { value: color },
     };
     this.transparent = true;
   }
