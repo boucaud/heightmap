@@ -1,4 +1,4 @@
-import { Object3D, Mesh } from "three";
+import { Object3D, Mesh, WireframeGeometry, LineSegments } from "three";
 
 import { HeightMapMaterial } from "../materials/HeightMapMaterial";
 import { Grid } from "../geometries/Grid";
@@ -6,6 +6,8 @@ import { Grid } from "../geometries/Grid";
 export class Map extends Object3D {
   constructor() {
     super();
-    this.add(new Mesh(new Grid(64), new HeightMapMaterial()));
+    const grid = new Grid(255);
+    this.add(new Mesh(grid, new HeightMapMaterial()));
+    // this.add(new LineSegments(new WireframeGeometry(grid)));
   }
 }
