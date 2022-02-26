@@ -3,6 +3,7 @@ import { Scene, PerspectiveCamera, WebGLRenderer, Color } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { Map } from "./entities/Map";
+import { Markers } from "./entities/Markers";
 
 export class SceneManager {
   private scene: Scene;
@@ -51,13 +52,17 @@ export class SceneManager {
       0.1,
       1000
     );
-    camera.position.z = 100;
+    camera.position.z = 5;
+    camera.rotateZ(Math.PI / 2);
     return camera;
   }
 
   buildEntities() {
     const map = new Map();
     this.scene.add(map);
+
+    const markers = new Markers();
+    this.scene.add(markers);
   }
 
   buildControls() {

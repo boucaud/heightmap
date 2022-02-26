@@ -1,4 +1,4 @@
-import { Object3D, Mesh, WireframeGeometry, LineSegments } from "three";
+import { Object3D, Mesh } from "three";
 
 import { HeightMapMaterial } from "../materials/HeightMapMaterial";
 import { Grid } from "../geometries/Grid";

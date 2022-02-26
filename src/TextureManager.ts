@@ -2,12 +2,13 @@ import { Texture, TextureLoader } from "three";
 
 import colormap from "assets/colormap.jpg";
 import heightmap from "assets/heightmap.jpg";
+import pin from "assets/pin.png";
 
 // A singleton to load textures before the scene is initialized
 class TextureManager {
   colorMapTexture: Texture | null = null;
   heightMapTexture: Texture | null = null;
-
+  pinTexture: Texture | null = null;
   private loader: TextureLoader;
 
   constructor() {
@@ -15,7 +16,7 @@ class TextureManager {
   }
 
   // Wrap TextureLoader.load within a promise
-  private async load(url: string) {
+  private load(url: string) {
     return new Promise<Texture>((resolve, reject) => {
       this.loader.load(
         url,
@@ -29,7 +30,7 @@ class TextureManager {
   }
 
   // Load all required textures
-  async loadAllTextures() {
+  loadAllTextures() {
     return Promise.all([
       this.load(colormap).then(
         (texture: Texture) => (this.colorMapTexture = texture)
@@ -37,6 +38,7 @@ class TextureManager {
       this.load(heightmap).then(
         (texture: Texture) => (this.heightMapTexture = texture)
       ),
+      this.load(pin).then((texture: Texture) => (this.pinTexture = texture)),
     ]);
   }
 }
