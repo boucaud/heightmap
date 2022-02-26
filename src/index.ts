@@ -1,15 +1,32 @@
 import { SceneManager } from "./SceneManager";
+import { textures } from "./TextureManager";
 
-const canvas = document.createElement('canvas');
+async function load() {
+  return textures.loadAllTextures();
+}
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function start() {
+  const canvas = document.createElement("canvas");
 
-const sceneManager = new SceneManager(canvas);
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  document.body.appendChild(canvas);
 
-window.onresize = () => sceneManager.onResize();
+  // Initialize the scene
+  const sceneManager = new SceneManager(canvas);
 
-document.body.appendChild(canvas);
+  // Bind events
+  window.onresize = () => sceneManager.onResize();
 
-// Trigger the first render
-sceneManager.update();
+  // Trigger the first render
+  sceneManager.update();
+}
+
+load()
+  .then(start)
+  .catch((error: ErrorEvent) => {
+    // Report the error to the user
+    const p = document.createElement("p");
+    p.textContent = `Failed to load textures. ${error.message || error.error || ''}`;
+    document.body.appendChild(p);
+  });
