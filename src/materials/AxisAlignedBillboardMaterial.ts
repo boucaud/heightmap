@@ -1,4 +1,5 @@
 import { DoubleSide, Texture, ShaderMaterial, Color } from "three";
+import { userParameters } from "../models/parameters";
 
 import { textures } from "../TextureManager";
 
@@ -60,7 +61,7 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
     this.uniforms = {
       pinTexture: { value: this.pinTexture },
       heightMap: { value: this.heightMapTexture },
-      heightMapLength: { value: 16.0 }, // TODO:
+      heightMapLength: { value: userParameters.gridLength }, // TODO:
       color: { value: color },
     };
     this.transparent = true;

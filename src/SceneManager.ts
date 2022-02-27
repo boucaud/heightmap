@@ -5,6 +5,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Map } from "./entities/Map";
 import { Markers } from "./entities/Markers";
 
+import { MainWidget } from "./controls/gui";
+import { userParameters } from "./models/parameters";
+
 export class SceneManager {
   private scene: Scene;
   private camera: PerspectiveCamera;
@@ -15,8 +18,10 @@ export class SceneManager {
 
   private width: number;
   private height: number;
+  private widget: MainWidget;
 
   constructor(canvas: HTMLCanvasElement) {
+    this.widget = new MainWidget();
     this.canvas = canvas;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
@@ -26,6 +31,7 @@ export class SceneManager {
     this.renderer = this.buildRenderer();
     this.orbitControls = this.buildControls();
     this.buildEntities();
+    userParameters.subscribe(() => this.update());
   }
 
   buildScene() {

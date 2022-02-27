@@ -1,6 +1,8 @@
-import { ShaderMaterial, DoubleSide, Texture, Color } from "three";
+import { ShaderMaterial, DoubleSide, Texture } from "three";
 
 import { textures } from "../TextureManager";
+
+import { userParameters } from "../models/parameters";
 
 const vs = `
   varying vec2 vUV;
@@ -53,15 +55,25 @@ export class HeightMapMaterial extends ShaderMaterial {
     this.colorTexture = textures.colorMapTexture as Texture;
     this.heightMapTexture = textures.heightMapTexture as Texture;
     const uniforms = {
-      gridLength: { value: 16.0 },
+      gridLength: { value: userParameters.gridLength },
       colorMap: { value: this.colorTexture },
       heightMap: { value: this.heightMapTexture },
-      heightScaleFactor: { value: 0.5 },
-      enableIsoLines: { value: false},
-      isoLineWidth: {value: 2.0 },
-      isoLineFrequency: {value: 100.0},
-      isoLineColor: {value: new Color(0.0, 0.5, 0.5)}
+      heightScaleFactor: { value: userParameters.heightMapScaleFactor },
+      enableIsoLines: { value: userParameters.enableIsoLines },
+      isoLineWidth: { value: userParameters.isoLineWidth },
+      isoLineFrequency: { value: userParameters.isoLineFrequency },
+      isoLineColor: { value: userParameters.isoLineColor },
     };
     this.uniforms = uniforms;
+    userParameters.subscribe(() => this.updateUniforms());
+  }
+
+  updateUniforms() {
+    this.uniforms.gridLength.value = userParameters.gridLength;
+    this.uniforms.heightScaleFactor.value = userParameters.heightMapScaleFactor;
+    this.uniforms.enableIsoLines.value = userParameters.enableIsoLines;
+    this.uniforms.isoLineWidth.value = userParameters.isoLineWidth;
+    this.uniforms.isoLineFrequency.value = userParameters.isoLineFrequency;
+    this.uniforms.isoLineColor.value = userParameters.isoLineColor;
   }
 }
