@@ -14,6 +14,12 @@ class Parameters {
   groupLut: Lut = new Lut("rainbow", eventGroups.length);
   markerScale = 0.1;
 
+  private times = eventGroups
+    .flat(1)
+    .map((event: { x: number; y: number; t: number }) => event.t);
+  minTimeStamp = Math.min(...this.times);
+  maxTimeStamp = Math.max(...this.times);
+
   subscriptions: (() => void)[] = [];
   subscribe(callback: () => void) {
     this.subscriptions.push(callback);
