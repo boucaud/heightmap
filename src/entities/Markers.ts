@@ -20,7 +20,7 @@ export class Markers extends Object3D {
     const pinScale = 0.1;
 
     // Testing non instanced with one group
-    const quad = new PinQuad(pinScale, 1.0, 1.0);
+    const quad = new PinQuad(pinScale);
     quad.computeVertexNormals();
     const dummy = new Object3D();
 
@@ -32,8 +32,7 @@ export class Markers extends Object3D {
       const mesh = new InstancedMesh(
         quad,
         new AxisAlignedBillboardMaterial(
-          lut.getColor(groupIndex / eventGroups.length),
-          pinScale
+          lut.getColor(groupIndex / eventGroups.length)
         ),
         events.length
       );

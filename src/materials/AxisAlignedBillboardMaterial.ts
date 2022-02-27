@@ -7,11 +7,23 @@ import { textures } from "../TextureManager";
 
 const vs = `
   varying vec2 vUV;
-  uniform float gridLength;
+
+  uniform float heightMapLength;
+
+  uniform sampler2D heightMap;
 
   void main() {
-    vUV = vec2(position.x / gridLength, position.y / gridLength) + vec2(0.5, 0.5);
-    gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(position, 1.0);
+    vUV = uv;
+
+    vec4 instancePosition = instanceMatrix * vec4(position, 1.0);
+
+    // Compute pin position on the grid, then deduct height map UVs
+    vec4 instanceGridPosition = instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+    vec2 heightMapUV = vec2(instanceGridPosition.x / heightMapLength, instanceGridPosition.y / heightMapLength) + vec2(0.5, 0.5);
+    float height = texture2D(heightMap, heightMapUV).x * 0.5; // TODO: scaling
+
+    instancePosition.z += height;
+    gl_Position = projectionMatrix * modelViewMatrix * instancePosition;
   }
 `;
 
@@ -22,7 +34,11 @@ const fs = `
 
   void main() {
     vec4 textureColor = texture2D(pinTexture, vUV) * vec4(color.rgb, 1.0);
-    gl_FragColor = textureColor;
+    float alpha = textureColor.a; // Cheap way to avoid transparency issues TODO: investigate sorting instances or depth peeling ?
+    gl_FragColor = vec4(textureColor.xyz, 1.0);
+    if (alpha <= 0.4) {
+      discard;
+    }
   }
 `;
 
@@ -31,10 +47,9 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
   pinTexture: Texture;
   heightMapTexture: Texture;
 
-  constructor(color: Color, scale: number) {
+  constructor(color: Color) {
     super({
       side: DoubleSide,
-      depthTest: false, // Always in front of the map
       fragmentShader: fs,
       vertexShader: vs,
       transparent: true,
@@ -43,8 +58,9 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
     this.pinTexture = textures.pinTexture as Texture;
     this.heightMapTexture = textures.heightMapTexture as Texture;
     this.uniforms = {
-      gridLength: { value: scale },
       pinTexture: { value: this.pinTexture },
+      heightMap: { value: this.heightMapTexture },
+      heightMapLength: { value: 16.0 }, // TODO:
       color: { value: color },
     };
     this.transparent = true;
