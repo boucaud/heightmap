@@ -48,7 +48,8 @@ export class MainWidget {
       userParameters,
       "minTimeStamp",
       userParameters.minTimeStamp,
-      userParameters.maxTimeStamp
+      userParameters.maxTimeStamp,
+      0.01
     );
     this.listeners.push(this.minTimeStampListener);
 
@@ -57,7 +58,8 @@ export class MainWidget {
         userParameters,
         "maxTimeStamp",
         userParameters.minTimeStamp,
-        userParameters.maxTimeStamp
+        userParameters.maxTimeStamp,
+        0.01
       )
     );
 

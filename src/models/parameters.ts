@@ -17,11 +17,16 @@ class Parameters {
   enableHeatMap = false;
   heatMapPrecision = 10.0;
 
+  // Timestamps are normalized in the buffers, to avoid using int64 buffers
+  // Ideally, gui values would not
   private times = eventGroups
     .flat(1)
     .map((event: { x: number; y: number; t: number }) => event.t);
-  minTimeStamp = Math.min(...this.times);
-  maxTimeStamp = Math.max(...this.times);
+  maxAvailableTimeStamp = Math.max(...this.times);
+  minAvailableTimeStamp = Math.min(...this.times);
+
+  minTimeStamp = 0.0;
+  maxTimeStamp = 1.0;
 
   subscriptions: (() => void)[] = [];
   subscribe(callback: () => void) {

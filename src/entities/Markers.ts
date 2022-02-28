@@ -1,4 +1,10 @@
-import { Object3D, InstancedMesh, StaticDrawUsage } from "three";
+import {
+  Object3D,
+  InstancedMesh,
+  StaticDrawUsage,
+  InstancedBufferAttribute,
+  InstancedBufferGeometry,
+} from "three";
 
 import { PinQuad } from "../geometries/PinQuad";
 import { AxisAlignedBillboardMaterial } from "../materials/AxisAlignedBillboardMaterial";
@@ -30,9 +36,23 @@ export class Markers extends Object3D {
     this.lut = userParameters.groupLut;
 
     // For each group, create a new instanced mesh with a specific color for each
+    const inverted =
+      1.0 /
+      (userParameters.maxAvailableTimeStamp -
+        userParameters.minAvailableTimeStamp);
     eventGroups.forEach((events: IEvent[], groupIndex) => {
+      const instancedQuad = new InstancedBufferGeometry().copy(this.quad);
+      const time = new Float32Array(events.length);
+      // Normalize
+      events.forEach(
+        ({ t }, index) =>
+          (time[index] = (t - userParameters.minAvailableTimeStamp) * inverted)
+      );
+      const timeAttribute = new InstancedBufferAttribute(time, 1);
+      instancedQuad.setAttribute("time", timeAttribute);
+
       const mesh = new InstancedMesh(
-        this.quad,
+        instancedQuad,
         new AxisAlignedBillboardMaterial(
           this.lut.getColor(groupIndex / eventGroups.length)
         ),

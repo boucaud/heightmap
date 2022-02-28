@@ -7,15 +7,17 @@ import { textures } from "../TextureManager";
 // TODO: z on top of heightmap
 
 const vs = `
+  attribute float time;
+
+  varying float vTime;
   varying vec2 vUV;
 
-  uniform float heightMapLength;
-
   uniform sampler2D heightMap;
+  uniform float heightMapLength;
 
   void main() {
     vUV = uv;
-
+    vTime = time;
     vec4 instancePosition = instanceMatrix * vec4(position, 1.0);
 
     // Compute pin position on the grid, then deduct height map UVs
@@ -29,15 +31,19 @@ const vs = `
 `;
 
 const fs = `
-  varying vec2 vUV;
-  uniform sampler2D pinTexture;
   uniform vec3 color;
+  uniform float maxTime;
+  uniform float minTime;
+  uniform sampler2D pinTexture;
+
+  varying float vTime;
+  varying vec2 vUV;
 
   void main() {
     vec4 textureColor = texture2D(pinTexture, vUV) * vec4(color.rgb, 1.0);
     float alpha = textureColor.a; // Cheap way to avoid transparency issues TODO: investigate sorting instances or depth peeling ?
     gl_FragColor = vec4(textureColor.xyz, 1.0);
-    if (alpha <= 0.4) {
+    if (alpha <= 0.4 || vTime < minTime || vTime > maxTime) {
       discard;
     }
   }
@@ -63,7 +69,15 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
       heightMap: { value: this.heightMapTexture },
       heightMapLength: { value: userParameters.gridLength * 2 }, // TODO:
       color: { value: color },
+      minTime: { value: userParameters.minTimeStamp },
+      maxTime: { value: userParameters.maxTimeStamp },
     };
     this.transparent = true;
+    userParameters.subscribe(() => this.updateUniforms());
+  }
+
+  updateUniforms() {
+    this.uniforms.minTime.value = userParameters.minTimeStamp;
+    this.uniforms.maxTime.value = userParameters.maxTimeStamp;
   }
 }
