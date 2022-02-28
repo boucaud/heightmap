@@ -8,8 +8,8 @@ export class MainWidget {
   minTimeStampListener: GUIController;
 
   colors = {
-    isoLineColor: userParameters.isoLineColor.getHex()
-  }
+    isoLineColor: userParameters.isoLineColor.getHex(),
+  };
 
   constructor() {
     this.gui = new GUI();
@@ -27,12 +27,17 @@ export class MainWidget {
       mapFolder.add(userParameters, "isoLineWidth", 1.0, 10.0, 1.0).listen()
     );
 
-    mapFolder
-        .addColor(this.colors, "isoLineColor")
-        .onChange((val) => {
-          userParameters.isoLineColor = new Color(val);
-          this.onChange();
-        })
+    mapFolder.addColor(this.colors, "isoLineColor").onChange((val) => {
+      userParameters.isoLineColor = new Color(val);
+      this.onChange();
+    });
+
+    this.listeners.push(
+      mapFolder.add(userParameters, "enableHeatMap").listen()
+    );
+    this.listeners.push(
+      mapFolder.add(userParameters, "heatMapPrecision", 1.0, 20.0).listen()
+    );
 
     const pinFolder = this.gui.addFolder("Markers");
     this.minTimeStampListener = pinFolder.add(

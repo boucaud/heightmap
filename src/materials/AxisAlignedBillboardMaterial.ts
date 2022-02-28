@@ -61,7 +61,7 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
     this.uniforms = {
       pinTexture: { value: this.pinTexture },
       heightMap: { value: this.heightMapTexture },
-      heightMapLength: { value: userParameters.gridLength }, // TODO:
+      heightMapLength: { value: userParameters.gridLength * 2 }, // TODO:
       color: { value: color },
     };
     this.transparent = true;

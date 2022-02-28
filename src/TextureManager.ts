@@ -9,6 +9,8 @@ class TextureManager {
   colorMapTexture: Texture | null = null;
   heightMapTexture: Texture | null = null;
   pinTexture: Texture | null = null;
+  heatMapTexture: Texture | null = null;
+
   private loader: TextureLoader;
 
   constructor() {

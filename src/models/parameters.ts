@@ -14,6 +14,9 @@ class Parameters {
   groupLut: Lut = new Lut("rainbow", eventGroups.length);
   markerScale = 0.1;
 
+  enableHeatMap = false;
+  heatMapPrecision = 10.0;
+
   private times = eventGroups
     .flat(1)
     .map((event: { x: number; y: number; t: number }) => event.t);

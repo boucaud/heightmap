@@ -1,12 +1,26 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color } from "three";
+import {
+  Scene,
+  PerspectiveCamera,
+  WebGLRenderer,
+  Color,
+  Points,
+  WebGLRenderTarget,
+  LinearFilter,
+  OrthographicCamera,
+} from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { Map } from "./entities/Map";
 import { Markers } from "./entities/Markers";
 
-import { MainWidget } from "./controls/gui";
+import { MainWidget } from "./controls/MainWidget";
 import { userParameters } from "./models/parameters";
+import { PinCloud } from "./geometries/PinCloud";
+
+import eventGroups from "../assets/position_events.json";
+import { PointCloudHeatMapMaterial } from "./materials/PointCloudHeatMapMaterial";
+import { textures } from "./TextureManager";
 
 export class SceneManager {
   private scene: Scene;
@@ -20,6 +34,8 @@ export class SceneManager {
   private height: number;
   private widget: MainWidget;
 
+  private heatMapTarget: WebGLRenderTarget;
+
   constructor(canvas: HTMLCanvasElement) {
     this.widget = new MainWidget();
     this.canvas = canvas;
@@ -30,13 +46,22 @@ export class SceneManager {
     this.camera = this.buildCamera();
     this.renderer = this.buildRenderer();
     this.orbitControls = this.buildControls();
+
+    this.heatMapTarget = new WebGLRenderTarget(1024, 1024, {
+      minFilter: LinearFilter,
+      magFilter: LinearFilter,
+    });
+    textures.heatMapTexture = this.heatMapTarget.texture;
+    // TODO: move to a more specific class
+    this.drawHeatMapTexture(); // TODO: only draw if parameters changed
+
     this.buildEntities();
     userParameters.subscribe(() => this.update());
   }
 
   buildScene() {
     const scene = new Scene();
-    scene.background = new Color(0x000055);
+    scene.background = new Color(0x005555);
     return scene;
   }
 
@@ -69,6 +94,22 @@ export class SceneManager {
 
     const markers = new Markers();
     this.scene.add(markers);
+    this.drawHeatMapTexture();
+  }
+
+  drawHeatMapTexture() {
+    // TODO: some resources can be reused
+    const scene = new Scene();
+    const pointCloud = new PinCloud(eventGroups.flat(1));
+    const material = new PointCloudHeatMapMaterial();
+
+    const cam = new OrthographicCamera(-50, 50, -50, 50, 0.1, 100);
+    const pointsObject = new Points(pointCloud, material);
+    scene.add(pointsObject);
+
+    this.renderer.setRenderTarget(this.heatMapTarget);
+    this.renderer.render(scene, cam);
+    this.renderer.setRenderTarget(null);
   }
 
   buildControls() {
@@ -86,6 +127,7 @@ export class SceneManager {
   }
 
   update() {
+    this.drawHeatMapTexture();
     this.renderer.render(this.scene, this.camera);
   }
 }
