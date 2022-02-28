@@ -6,9 +6,17 @@ export class MainWidget {
   gui: GUI;
   listeners: GUIController[] = [];
   minTimeStampListener: GUIController;
+  maxTimeStampListener: GUIController;
 
   colors = {
     isoLineColor: userParameters.isoLineColor.getHex(),
+  };
+
+  animation = {
+    // How much time values will change per frame
+    animationIncrement: 0.01,
+    animate: false,
+    disableMinAnimation: true,
   };
 
   constructor() {
@@ -53,16 +61,21 @@ export class MainWidget {
     );
     this.listeners.push(this.minTimeStampListener);
 
-    this.listeners.push(
-      pinFolder.add(
-        userParameters,
-        "maxTimeStamp",
-        userParameters.minTimeStamp,
-        userParameters.maxTimeStamp,
-        0.01
-      )
+    this.maxTimeStampListener = pinFolder.add(
+      userParameters,
+      "maxTimeStamp",
+      userParameters.minTimeStamp,
+      userParameters.maxTimeStamp,
+      0.01
     );
+    this.listeners.push(this.maxTimeStampListener);
 
+    pinFolder.add(this.animation, "animationIncrement", 0.0, 0.1);
+    pinFolder
+      .add(this.animation, "animate")
+      .listen()
+      .onChange(() => this.animate());
+    pinFolder.add(this.animation, "disableMinAnimation");
     // TODO: lut
     mapFolder.open();
     pinFolder.open();
@@ -70,6 +83,35 @@ export class MainWidget {
     this.listeners.forEach((listener) =>
       listener.onChange(() => this.onChange())
     );
+  }
+
+  // Animate the timestamp window
+  // Since we dont' have a render loop as only parameter changes trigger renders,
+  // we can directly animate the parameters
+  animate() {
+    if (this.animation.animate) {
+      requestAnimationFrame(() => this.animate());
+    }
+    if (!this.animation.disableMinAnimation) {
+      userParameters.minTimeStamp += this.animation.animationIncrement;
+      userParameters.minTimeStamp = Math.min(
+        userParameters.maxTimeStamp,
+        userParameters.minTimeStamp
+      );
+    }
+
+    userParameters.maxTimeStamp += this.animation.animationIncrement;
+    userParameters.maxTimeStamp = Math.min(1.0, userParameters.maxTimeStamp);
+    if (
+      userParameters.maxTimeStamp >= 1.0 &&
+      (userParameters.minTimeStamp >= userParameters.maxTimeStamp ||
+        this.animation.disableMinAnimation)
+    ) {
+      this.animation.animate = false;
+    }
+    this.minTimeStampListener.updateDisplay();
+    this.maxTimeStampListener.updateDisplay();
+    this.onChange();
   }
 
   onChange() {
