@@ -19,7 +19,7 @@ const fs = `
     // With more time, use integer gl.RED texture then normalize
 
     vec2 centerVector = gl_PointCoord - vec2(0.5 * heatMapPrecision);
-    gl_FragColor = vec4(0.1, 0.0, 0.0, 1.0);
+    gl_FragColor = vec4(0.05, 0.0, 0.0, 1.0);
     // We want circles, not squares
     if (length(centerVector) > heatMapPrecision * 0.7) {
       discard;
