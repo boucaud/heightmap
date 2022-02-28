@@ -17,27 +17,31 @@ export class MainWidget {
     this.listeners.push(
       mapFolder.add(userParameters, "mapResolution", 512, 2048).listen()
     );
-    this.listeners.push(
-      mapFolder.add(userParameters, "enableIsoLines").listen()
-    );
-    this.listeners.push(
-      mapFolder.add(userParameters, "isoLineFrequency", 10, 1000).listen()
-    );
-    this.listeners.push(
-      mapFolder.add(userParameters, "isoLineWidth", 1.0, 10.0, 1.0).listen()
-    );
 
-    mapFolder.addColor(this.colors, "isoLineColor").onChange((val) => {
+    const isoLineFolder = this.gui.addFolder("Isometric Lines");
+    this.listeners.push(
+      isoLineFolder.add(userParameters, "enableIsoLines").listen()
+    );
+    this.listeners.push(
+      isoLineFolder.add(userParameters, "isoLineFrequency", 10, 1000).listen()
+    );
+    this.listeners.push(
+      isoLineFolder.add(userParameters, "isoLineWidth", 1.0, 10.0, 1.0).listen()
+    );
+    isoLineFolder.addColor(this.colors, "isoLineColor").onChange((val) => {
       userParameters.isoLineColor = new Color(val);
       this.onChange();
     });
+    isoLineFolder.open();
 
+    const heatMapFolder = this.gui.addFolder("Heat Map");
     this.listeners.push(
-      mapFolder.add(userParameters, "enableHeatMap").listen()
+      heatMapFolder.add(userParameters, "enableHeatMap").listen()
     );
     this.listeners.push(
-      mapFolder.add(userParameters, "heatMapPrecision", 1.0, 20.0).listen()
+      heatMapFolder.add(userParameters, "heatMapPrecision", 1.0, 20.0).listen()
     );
+    heatMapFolder.open();
 
     const pinFolder = this.gui.addFolder("Markers");
     this.minTimeStampListener = pinFolder.add(
