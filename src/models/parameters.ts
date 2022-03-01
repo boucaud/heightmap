@@ -16,6 +16,7 @@ class Parameters {
 
   enableHeatMap = false;
   heatMapRadius = 10.0;
+  heatMapRangeMax = 10.0;
 
   // Timestamps are normalized in the buffers, to avoid using int64 buffers
   // Ideally, gui values would not

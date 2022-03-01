@@ -47,7 +47,10 @@ export class MainWidget {
       heatMapFolder.add(userParameters, "enableHeatMap").listen()
     );
     this.listeners.push(
-      heatMapFolder.add(userParameters, "heatMapRadius", 1.0, 20.0).listen()
+      heatMapFolder.add(userParameters, "heatMapRadius", 1.0, 30.0).listen()
+    );
+    this.listeners.push(
+      heatMapFolder.add(userParameters, 'heatMapRangeMax', 0, 100, 10)
     );
     heatMapFolder.open();
 
