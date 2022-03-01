@@ -6,20 +6,20 @@ const vs = `
   precision highp float;
   attribute float time;
 
-  uniform float heatMapPrecision;
+  uniform float heatMapRadius;
 
   varying float vTime;
 
   void main() {
     vTime = time;
     gl_Position = vec4(position / 16., 1.0);
-    gl_PointSize = heatMapPrecision;
+    gl_PointSize = heatMapRadius;
   }
 `;
 
 const fs = `
   precision highp float;
-  uniform float heatMapPrecision;
+  uniform float heatMapRadius;
   uniform float maxTime;
   uniform float minTime;
 
@@ -29,10 +29,10 @@ const fs = `
     // Very simplistic accumulation, range is fixed to [0,10]
     // With more time, use integer gl.RED texture then normalize
 
-    vec2 centerVector = gl_PointCoord - vec2(0.5 * heatMapPrecision);
+    vec2 centerVector = gl_PointCoord - vec2(0.5 * heatMapRadius);
     gl_FragColor = vec4(0.05, 0.0, 0.0, 1.0);
     // We want circles, not squares TODO: fix
-    if (length(centerVector) > heatMapPrecision * 0.7 ||  vTime < minTime || vTime > maxTime) {
+    if (length(centerVector) > heatMapRadius * 0.7 ||  vTime < minTime || vTime > maxTime) {
       discard;
     }
   }
@@ -48,7 +48,7 @@ export class PointCloudHeatMapMaterial extends ShaderMaterial {
     });
 
     const uniforms = {
-      heatMapPrecision: { value: userParameters.heatMapPrecision },
+      heatMapRadius: { value: userParameters.heatMapRadius },
       minTime: { value: userParameters.minTimeStamp },
       maxTime: { value: userParameters.maxTimeStamp },
     };
@@ -57,7 +57,7 @@ export class PointCloudHeatMapMaterial extends ShaderMaterial {
   }
 
   updateUniforms() {
-    this.uniforms.heatMapPrecision.value = userParameters.heatMapPrecision;
+    this.uniforms.heatMapRadius.value = userParameters.heatMapRadius;
     this.uniforms.minTime.value = userParameters.minTimeStamp;
     this.uniforms.maxTime.value = userParameters.maxTimeStamp;
   }

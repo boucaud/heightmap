@@ -47,7 +47,7 @@ export class MainWidget {
       heatMapFolder.add(userParameters, "enableHeatMap").listen()
     );
     this.listeners.push(
-      heatMapFolder.add(userParameters, "heatMapPrecision", 1.0, 20.0).listen()
+      heatMapFolder.add(userParameters, "heatMapRadius", 1.0, 20.0).listen()
     );
     heatMapFolder.open();
 

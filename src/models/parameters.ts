@@ -15,7 +15,7 @@ class Parameters {
   markerScale = 0.1;
 
   enableHeatMap = false;
-  heatMapPrecision = 10.0;
+  heatMapRadius = 10.0;
 
   // Timestamps are normalized in the buffers, to avoid using int64 buffers
   // Ideally, gui values would not
