@@ -16,7 +16,7 @@ export class MainWidget {
     // How much time values will change per frame
     animationIncrement: 0.01,
     animate: false,
-    disableMinAnimation: true,
+    disableMinAnimation: false,
   };
 
   constructor() {
