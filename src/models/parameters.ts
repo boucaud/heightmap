@@ -29,6 +29,8 @@ class Parameters {
   minTimeStamp = 0.0;
   maxTimeStamp = 1.0;
 
+  ambientColor: Color = new Color(0.1, 0.1, 0.1);
+
   subscriptions: (() => void)[] = [];
   subscribe(callback: () => void) {
     this.subscriptions.push(callback);

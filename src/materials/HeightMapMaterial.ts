@@ -39,6 +39,8 @@ const fs = `
   uniform float isoLineFrequency;
   uniform vec3 isoLineColor;
 
+  uniform vec3 ambientLight;
+
   void main() {
     // Isoline density
     float f = fract(height * isoLineFrequency);
@@ -55,9 +57,13 @@ const fs = `
     float heat = texture(heatMapTexture, vUV).r;
     vec4 heatColor = vec4(texture(lutTexture, vec2(heat, 0.5)).rgb, 1.0);
     // Replace colormap with heat color if enabled.
-    vec4 color = mix(textureColor, heatColor, float(enableHeatMap));
+    vec4 materialColor = mix(textureColor, heatColor, float(enableHeatMap));
+    // Use isoline color if we're on a step
+    materialColor = mix(vec4(isoLineColor, 1.0), materialColor, fstep);
 
-    gl_FragColor = mix(vec4(isoLineColor, 1.0), color, fstep);
+    vec3 color = ambientLight + materialColor.xyz;
+
+    gl_FragColor = vec4(color, materialColor.a);
   }
 `;
 
@@ -86,6 +92,7 @@ export class HeightMapMaterial extends ShaderMaterial {
       lutTexture: { value: this.getLutTexture() },
       enableHeatMap: { value: userParameters.enableHeatMap },
       heatMapTexture: { value: textures.heatMapTexture },
+      ambientLight: { value: userParameters.ambientColor },
     };
     this.uniforms = uniforms;
     userParameters.subscribe(() => this.updateUniforms());
@@ -117,5 +124,6 @@ export class HeightMapMaterial extends ShaderMaterial {
     this.uniforms.isoLineFrequency.value = userParameters.isoLineFrequency;
     this.uniforms.isoLineColor.value = userParameters.isoLineColor;
     this.uniforms.enableHeatMap.value = userParameters.enableHeatMap;
+    this.uniforms.ambientLight.value = userParameters.ambientColor;
   }
 }

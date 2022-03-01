@@ -10,6 +10,7 @@ export class MainWidget {
 
   colors = {
     isoLineColor: userParameters.isoLineColor.getHex(),
+    ambient: userParameters.ambientColor.getHex(),
   };
 
   animation = {
@@ -41,10 +42,9 @@ export class MainWidget {
       isoLineFolder.add(userParameters, "isoLineWidth", 1.0, 10.0, 1.0)
     );
     isoLineFolder.addColor(this.colors, "isoLineColor").onChange((val) => {
-      userParameters.isoLineColor = new Color(val);
+      userParameters.isoLineColor.set(val);
       this.onChange();
     });
-    isoLineFolder.open();
 
     const heatMapFolder = this.gui.addFolder("Heat Map");
     this.listeners.push(
@@ -56,7 +56,6 @@ export class MainWidget {
     this.listeners.push(
       heatMapFolder.add(userParameters, 'heatMapRangeMax', 0, 100, 10)
     );
-    heatMapFolder.open();
 
     const pinFolder = this.gui.addFolder("Markers");
     this.minTimeStampListener = pinFolder.add(
@@ -89,8 +88,18 @@ export class MainWidget {
       );
     pinFolder.add(this.animation, "disableMinAnimation");
     // TODO: lut
+
+    const lightFolder = this.gui.addFolder('Lighting');
+    lightFolder.addColor(this.colors, 'ambient').onChange((val) => {
+      userParameters.ambientColor.set(val);
+      this.onChange()
+    })
+
+    isoLineFolder.open();
     mapFolder.open();
+    heatMapFolder.open();
     pinFolder.open();
+    lightFolder.open();
 
     this.listeners.forEach((listener) =>
       listener.onChange(() => this.onChange())
