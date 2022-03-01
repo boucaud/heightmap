@@ -48,7 +48,7 @@ export class PointCloudHeatMapMaterial extends ShaderMaterial {
       heatMapRadius: { value: userParameters.heatMapRadius },
       minTime: { value: userParameters.minTimeStamp },
       maxTime: { value: userParameters.maxTimeStamp },
-      heatIncrement: { value: 1.0 / userParameters.heatMapRangeMax }
+      heatIncrement: { value: 1.0 / userParameters.heatMapRangeMax },
     };
     this.uniforms = uniforms;
     userParameters.subscribe(() => this.updateUniforms());

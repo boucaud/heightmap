@@ -76,7 +76,7 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
       color: { value: color },
       minTime: { value: userParameters.minTimeStamp },
       maxTime: { value: userParameters.maxTimeStamp },
-      heightScaleFactor: { value: userParameters.heightMapScaleFactor }
+      heightScaleFactor: { value: userParameters.heightMapScaleFactor },
     };
     this.transparent = true;
     userParameters.subscribe(() => this.updateUniforms());

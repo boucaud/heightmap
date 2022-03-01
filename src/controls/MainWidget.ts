@@ -1,6 +1,5 @@
 import { GUI, GUIController } from "dat.gui";
 import { userParameters } from "../models/parameters";
-import { Color } from "three";
 
 export class MainWidget {
   gui: GUI;
@@ -28,13 +27,11 @@ export class MainWidget {
     );
 
     this.listeners.push(
-      mapFolder.add(userParameters, 'heightMapScaleFactor', 0.0, 5.0)
+      mapFolder.add(userParameters, "heightMapScaleFactor", 0.0, 5.0)
     );
 
     const isoLineFolder = this.gui.addFolder("Isometric Lines");
-    this.listeners.push(
-      isoLineFolder.add(userParameters, "enableIsoLines")
-    );
+    this.listeners.push(isoLineFolder.add(userParameters, "enableIsoLines"));
     this.listeners.push(
       isoLineFolder.add(userParameters, "isoLineFrequency", 10, 1000)
     );
@@ -47,14 +44,12 @@ export class MainWidget {
     });
 
     const heatMapFolder = this.gui.addFolder("Heat Map");
-    this.listeners.push(
-      heatMapFolder.add(userParameters, "enableHeatMap")
-    );
+    this.listeners.push(heatMapFolder.add(userParameters, "enableHeatMap"));
     this.listeners.push(
       heatMapFolder.add(userParameters, "heatMapRadius", 1.0, 30.0)
     );
     this.listeners.push(
-      heatMapFolder.add(userParameters, 'heatMapRangeMax', 0, 100, 10)
+      heatMapFolder.add(userParameters, "heatMapRangeMax", 0, 100, 10)
     );
 
     const pinFolder = this.gui.addFolder("Markers");
@@ -77,23 +72,24 @@ export class MainWidget {
     this.listeners.push(this.maxTimeStampListener);
 
     pinFolder.add(this.animation, "animationIncrement", 0.0, 0.1);
-    pinFolder
-      .add(this.animation, "animate")
-      .onChange(() => {
-        // If we're only animating the max, reset it automatically
-        if (userParameters.maxTimeStamp >= 1.0 && this.animation.disableMinAnimation) {
-          userParameters.maxTimeStamp = 0.0;
-        }
-        this.animate()}
-      );
+    pinFolder.add(this.animation, "animate").onChange(() => {
+      // If we're only animating the max, reset it automatically
+      if (
+        userParameters.maxTimeStamp >= 1.0 &&
+        this.animation.disableMinAnimation
+      ) {
+        userParameters.maxTimeStamp = 0.0;
+      }
+      this.animate();
+    });
     pinFolder.add(this.animation, "disableMinAnimation");
     // TODO: lut
 
-    const lightFolder = this.gui.addFolder('Lighting');
-    lightFolder.addColor(this.colors, 'ambient').onChange((val) => {
+    const lightFolder = this.gui.addFolder("Lighting");
+    lightFolder.addColor(this.colors, "ambient").onChange((val) => {
       userParameters.ambientColor.set(val);
-      this.onChange()
-    })
+      this.onChange();
+    });
 
     isoLineFolder.open();
     mapFolder.open();
