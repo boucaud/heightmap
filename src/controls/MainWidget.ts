@@ -10,11 +10,12 @@ export class MainWidget {
   colors = {
     isoLineColor: userParameters.isoLineColor.getHex(),
     ambient: userParameters.ambientColor.getHex(),
+    diffuse: userParameters.diffuseColor.getHex(),
   };
 
   animation = {
     // How much time values will change per frame
-    animationIncrement: 0.01,
+    animationIncrement: 0.001,
     animate: false,
     disableMinAnimation: true,
   };
@@ -90,6 +91,16 @@ export class MainWidget {
       userParameters.ambientColor.set(val);
       this.onChange();
     });
+    lightFolder.addColor(this.colors, "diffuse").onChange((val) => {
+      userParameters.diffuseColor.set(val);
+      this.onChange();
+    });
+    lightFolder
+      .add(userParameters, "lightAngle", 10, 170)
+      .onChange(() => userParameters.lightAngleChanged());
+    lightFolder
+      .add(userParameters, "lightDistance", 0, 1000)
+      .onChange(() => userParameters.lightAngleChanged());
 
     isoLineFolder.open();
     mapFolder.open();

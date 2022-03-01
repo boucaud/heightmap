@@ -21,7 +21,7 @@ interface IEvent {
 }
 
 export class Markers extends Object3D {
-  pinScale = 0.2;
+  pinScale = 1.0;
   quad: PinQuad;
   lut: Lut;
   constructor() {
