@@ -12,7 +12,7 @@ class Parameters {
   isoLineColor: Color = new Color(0.8, 0.8, 1.0);
 
   groupLut: Lut = new Lut("rainbow", eventGroups.length);
-  markerScale = 0.1;
+  markerScale = 0.5;
 
   enableHeatMap = false;
   heatMapRadius = 10.0;

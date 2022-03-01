@@ -16,6 +16,8 @@ const vs = `
   uniform float heightMapLength;
   uniform float heightScaleFactor;
 
+  uniform float scale;
+
   void main() {
     vUV = uv;
     vTime = time;
@@ -29,7 +31,7 @@ const vs = `
 
     // Billboards
     vec4 mvInstancePosition = modelViewMatrix * instanceGridPosition;
-    mvInstancePosition.xy += position.xy;
+    mvInstancePosition.xy += position.xy * vec2 (scale, scale);
 
     gl_Position = projectionMatrix * mvInstancePosition;
   }
@@ -71,6 +73,7 @@ export class BillboardMaterial extends ShaderMaterial {
     this.heightMapTexture = textures.heightMapTexture as Texture;
     this.uniforms = {
       pinTexture: { value: this.pinTexture },
+      scale: { value: userParameters.markerScale },
       heightMap: { value: this.heightMapTexture },
       heightMapLength: { value: userParameters.gridLength * 2 }, // TODO:
       color: { value: color },
@@ -86,5 +89,6 @@ export class BillboardMaterial extends ShaderMaterial {
     this.uniforms.minTime.value = userParameters.minTimeStamp;
     this.uniforms.maxTime.value = userParameters.maxTimeStamp;
     this.uniforms.heightScaleFactor.value = userParameters.heightMapScaleFactor;
+    this.uniforms.scale.value = userParameters.markerScale;
   }
 }

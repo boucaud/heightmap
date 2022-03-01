@@ -54,6 +54,7 @@ export class MainWidget {
     );
 
     const pinFolder = this.gui.addFolder("Markers");
+    this.listeners.push(pinFolder.add(userParameters, 'markerScale', 0.0, 10));
     this.minTimeStampListener = pinFolder.add(
       userParameters,
       "minTimeStamp",

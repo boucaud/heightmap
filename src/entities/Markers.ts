@@ -27,9 +27,7 @@ export class Markers extends Object3D {
   constructor() {
     super();
 
-    this.pinScale = userParameters.markerScale;
-
-    this.quad = new PinQuad(this.pinScale);
+    this.quad = new PinQuad();
     const dummy = new Object3D();
 
     // Lookup-table to get consistent colors for each group
