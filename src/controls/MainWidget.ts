@@ -34,7 +34,7 @@ export class MainWidget {
     const isoLineFolder = this.gui.addFolder("Isometric Lines");
     this.listeners.push(isoLineFolder.add(userParameters, "enableIsoLines"));
     this.listeners.push(
-      isoLineFolder.add(userParameters, "isoLineFrequency", 10, 1000)
+      isoLineFolder.add(userParameters, "isoLineFrequency", 10, 100)
     );
     this.listeners.push(
       isoLineFolder.add(userParameters, "isoLineWidth", 1.0, 10.0, 1.0)
@@ -85,7 +85,6 @@ export class MainWidget {
       this.animate();
     });
     pinFolder.add(this.animation, "disableMinAnimation");
-    // TODO: lut
 
     const lightFolder = this.gui.addFolder("Lighting");
     lightFolder.addColor(this.colors, "ambient").onChange((val) => {
