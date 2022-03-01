@@ -23,18 +23,18 @@ export class MainWidget {
     this.gui = new GUI();
     const mapFolder = this.gui.addFolder("Height Map");
     this.listeners.push(
-      mapFolder.add(userParameters, "mapResolution", 512, 2048).listen()
+      mapFolder.add(userParameters, "mapResolution", 512, 2048)
     );
 
     const isoLineFolder = this.gui.addFolder("Isometric Lines");
     this.listeners.push(
-      isoLineFolder.add(userParameters, "enableIsoLines").listen()
+      isoLineFolder.add(userParameters, "enableIsoLines")
     );
     this.listeners.push(
-      isoLineFolder.add(userParameters, "isoLineFrequency", 10, 1000).listen()
+      isoLineFolder.add(userParameters, "isoLineFrequency", 10, 1000)
     );
     this.listeners.push(
-      isoLineFolder.add(userParameters, "isoLineWidth", 1.0, 10.0, 1.0).listen()
+      isoLineFolder.add(userParameters, "isoLineWidth", 1.0, 10.0, 1.0)
     );
     isoLineFolder.addColor(this.colors, "isoLineColor").onChange((val) => {
       userParameters.isoLineColor = new Color(val);
@@ -44,10 +44,10 @@ export class MainWidget {
 
     const heatMapFolder = this.gui.addFolder("Heat Map");
     this.listeners.push(
-      heatMapFolder.add(userParameters, "enableHeatMap").listen()
+      heatMapFolder.add(userParameters, "enableHeatMap")
     );
     this.listeners.push(
-      heatMapFolder.add(userParameters, "heatMapRadius", 1.0, 30.0).listen()
+      heatMapFolder.add(userParameters, "heatMapRadius", 1.0, 30.0)
     );
     this.listeners.push(
       heatMapFolder.add(userParameters, 'heatMapRangeMax', 0, 100, 10)
@@ -76,7 +76,6 @@ export class MainWidget {
     pinFolder.add(this.animation, "animationIncrement", 0.0, 0.1);
     pinFolder
       .add(this.animation, "animate")
-      .listen()
       .onChange(() => {
         // If we're only animating the max, reset it automatically
         if (userParameters.maxTimeStamp >= 1.0 && this.animation.disableMinAnimation) {
