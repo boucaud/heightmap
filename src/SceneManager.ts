@@ -83,8 +83,8 @@ export class SceneManager {
       0.1,
       1000
     );
-    camera.position.z = 5;
-    camera.rotateZ(Math.PI / 2);
+    camera.position.y = -16;
+    camera.position.z = 16;
     return camera;
   }
 
@@ -122,6 +122,11 @@ export class SceneManager {
 
   buildControls() {
     const controls = new OrbitControls(this.camera, this.renderer.domElement);
+
+    // Limit the ability to look below the map
+    controls.maxAzimuthAngle = Math.PI / 2;
+    controls.minAzimuthAngle = -Math.PI / 2;
+
     controls.addEventListener("change", () => this.update());
     return controls;
   }
