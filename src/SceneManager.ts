@@ -1,13 +1,4 @@
-import {
-  Scene,
-  PerspectiveCamera,
-  WebGLRenderer,
-  Color,
-  Points,
-  WebGLRenderTarget,
-  LinearFilter,
-  OrthographicCamera,
-} from "three";
+import { Scene, PerspectiveCamera, WebGLRenderer, Color } from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
@@ -16,11 +7,8 @@ import { Markers } from "./entities/Markers";
 
 import { MainWidget } from "./controls/MainWidget";
 import { userParameters } from "./models/parameters";
-import { PinCloud } from "./geometries/PinCloud";
 
-import eventGroups from "../assets/position_events.json";
-import { PointCloudHeatMapMaterial } from "./materials/PointCloudHeatMapMaterial";
-import { textures } from "./TextureManager";
+import { HeatMapRenderer } from "./PointCloudHeatMapRenderer";
 
 export class SceneManager {
   private scene: Scene;
@@ -34,7 +22,7 @@ export class SceneManager {
   private height: number;
   private widget: MainWidget;
 
-  private heatMapTarget: WebGLRenderTarget;
+  private heatMapRenderer: HeatMapRenderer;
 
   constructor(canvas: HTMLCanvasElement) {
     this.widget = new MainWidget();
@@ -47,16 +35,11 @@ export class SceneManager {
     this.renderer = this.buildRenderer();
     this.orbitControls = this.buildControls();
 
-    this.heatMapTarget = new WebGLRenderTarget(1024, 1024, {
-      minFilter: LinearFilter,
-      magFilter: LinearFilter,
-    });
-    textures.heatMapTexture = this.heatMapTarget.texture;
-    // TODO: move to a more specific class
-    this.drawHeatMapTexture(); // TODO: only draw if parameters changed
+    this.heatMapRenderer = new HeatMapRenderer(this.renderer);
 
     this.buildEntities();
     userParameters.subscribe(() => this.update());
+    this.update();
   }
 
   buildScene() {
@@ -101,23 +84,7 @@ export class SceneManager {
 
     const markers = new Markers();
     this.scene.add(markers);
-    this.drawHeatMapTexture();
     markers.renderOrder = 1;
-  }
-
-  drawHeatMapTexture() {
-    // TODO: some resources can be reused
-    const scene = new Scene();
-    const pointCloud = new PinCloud(eventGroups.flat(1));
-    const material = new PointCloudHeatMapMaterial();
-
-    const cam = new OrthographicCamera(-50, 50, -50, 50, 0.1, 100);
-    const pointsObject = new Points(pointCloud, material);
-    scene.add(pointsObject);
-
-    this.renderer.setRenderTarget(this.heatMapTarget);
-    this.renderer.render(scene, cam);
-    this.renderer.setRenderTarget(null);
   }
 
   buildControls() {
@@ -140,7 +107,7 @@ export class SceneManager {
   }
 
   update() {
-    this.drawHeatMapTexture();
+    this.heatMapRenderer.drawHeatMapTexture();
     this.renderer.render(this.scene, this.camera);
   }
 }
