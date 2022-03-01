@@ -5,7 +5,7 @@ import eventGroups from "../../assets/position_events.json";
 class Parameters {
   mapResolution = 1280;
   gridLength = 16.0;
-  heightMapScaleFactor = 0.5;
+  heightMapScaleFactor = 1.0;
   enableIsoLines = false;
   isoLineWidth = 2.0;
   isoLineFrequency = 100.0;

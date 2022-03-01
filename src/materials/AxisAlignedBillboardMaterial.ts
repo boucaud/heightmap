@@ -14,6 +14,7 @@ const vs = `
 
   uniform sampler2D heightMap;
   uniform float heightMapLength;
+  uniform float heightScaleFactor;
 
   void main() {
     vUV = uv;
@@ -22,7 +23,7 @@ const vs = `
     // Compute pin position on the grid, then deduct height map UVs
     vec4 instanceGridPosition = instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
     vec2 heightMapUV = vec2(instanceGridPosition.x / heightMapLength, instanceGridPosition.y / heightMapLength) + vec2(0.5, 0.5);
-    float height = texture2D(heightMap, heightMapUV).x * 0.5; // TODO: scaling
+    float height = texture2D(heightMap, heightMapUV).x * heightScaleFactor;
 
     instanceGridPosition.z += height;
 
@@ -75,6 +76,7 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
       color: { value: color },
       minTime: { value: userParameters.minTimeStamp },
       maxTime: { value: userParameters.maxTimeStamp },
+      heightScaleFactor: { value: userParameters.heightMapScaleFactor }
     };
     this.transparent = true;
     userParameters.subscribe(() => this.updateUniforms());
@@ -83,5 +85,6 @@ export class AxisAlignedBillboardMaterial extends ShaderMaterial {
   updateUniforms() {
     this.uniforms.minTime.value = userParameters.minTimeStamp;
     this.uniforms.maxTime.value = userParameters.maxTimeStamp;
+    this.uniforms.heightScaleFactor.value = userParameters.heightMapScaleFactor;
   }
 }

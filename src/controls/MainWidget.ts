@@ -26,6 +26,10 @@ export class MainWidget {
       mapFolder.add(userParameters, "mapResolution", 512, 2048)
     );
 
+    this.listeners.push(
+      mapFolder.add(userParameters, 'heightMapScaleFactor', 0.0, 5.0)
+    );
+
     const isoLineFolder = this.gui.addFolder("Isometric Lines");
     this.listeners.push(
       isoLineFolder.add(userParameters, "enableIsoLines")
