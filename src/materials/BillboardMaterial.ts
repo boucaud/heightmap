@@ -55,7 +55,7 @@ const fs = `
 `;
 
 // TODO: RawShaderMaterial necessary to follow instructions to the letter ?
-export class AxisAlignedBillboardMaterial extends ShaderMaterial {
+export class BillboardMaterial extends ShaderMaterial {
   pinTexture: Texture;
   heightMapTexture: Texture;
 

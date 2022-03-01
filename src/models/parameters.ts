@@ -33,7 +33,7 @@ class Parameters {
   diffuseColor: Color = new Color(1.0, 1.0, 1.0);
 
   lightPosition = new Vector3(0.0, 0.0, 0.0);
-  lightDistance = 50.0;
+  lightDistance = 35.0;
   lightAngle = 60;
 
   constructor() {

@@ -7,7 +7,7 @@ import {
 } from "three";
 
 import { PinQuad } from "../geometries/PinQuad";
-import { AxisAlignedBillboardMaterial } from "../materials/AxisAlignedBillboardMaterial";
+import { BillboardMaterial } from "../materials/BillboardMaterial";
 
 // TODO: alias not working
 import eventGroups from "../../assets/position_events.json";
@@ -53,7 +53,7 @@ export class Markers extends Object3D {
 
       const mesh = new InstancedMesh(
         instancedQuad,
-        new AxisAlignedBillboardMaterial(
+        new BillboardMaterial(
           this.lut.getColor(groupIndex / eventGroups.length)
         ),
         events.length
