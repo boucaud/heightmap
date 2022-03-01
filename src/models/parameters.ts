@@ -14,9 +14,9 @@ class Parameters {
   groupLut: Lut = new Lut("rainbow", eventGroups.length);
   markerScale = 0.25;
 
-  enableHeatMap = false;
+  enableHeatMap = true;
   heatMapRadius = 20.0;
-  heatMapRangeMax = 20.0;
+  heatMapRangeMax = 40.0;
 
   // Timestamps are normalized in the buffers, to avoid using int64 buffers
   // Ideally, gui values would not
