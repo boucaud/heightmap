@@ -66,7 +66,11 @@ export class HeightMapMaterial extends ShaderMaterial {
   colorTexture: Texture;
   heightMapTexture: Texture;
   constructor() {
-    super({ side: DoubleSide, fragmentShader: fs, vertexShader: vs });
+    super({
+      side: DoubleSide,
+      fragmentShader: fs,
+      vertexShader: vs,
+    });
     // If texture loading failed, the application would have aborted TODO: make this a bit cleaner
     this.colorTexture = textures.colorMapTexture as Texture;
     this.heightMapTexture = textures.heightMapTexture as Texture;

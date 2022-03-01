@@ -61,7 +61,7 @@ export class SceneManager {
 
   buildScene() {
     const scene = new Scene();
-    scene.background = new Color(0x005555);
+    scene.background = new Color(0x555555);
     return scene;
   }
 
@@ -90,11 +90,19 @@ export class SceneManager {
 
   buildEntities() {
     const map = new Map();
+    map.renderOrder = 0;
     this.scene.add(map);
+
+    // Clear depth after rendering the map
+    // Because markers have to stay on top
+    map.mesh.onAfterRender = (renderer) => {
+      renderer.clearDepth();
+    };
 
     const markers = new Markers();
     this.scene.add(markers);
     this.drawHeatMapTexture();
+    markers.renderOrder = 1;
   }
 
   drawHeatMapTexture() {

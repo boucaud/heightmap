@@ -58,6 +58,7 @@ export class Markers extends Object3D {
         ),
         events.length
       );
+
       mesh.instanceMatrix.setUsage(StaticDrawUsage);
       events.forEach((event: IEvent, index) => {
         // Compute the matrix for this instance
