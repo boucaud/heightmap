@@ -18,15 +18,19 @@ const vs = `
   void main() {
     vUV = uv;
     vTime = time;
-    vec4 instancePosition = instanceMatrix * vec4(position, 1.0);
 
     // Compute pin position on the grid, then deduct height map UVs
     vec4 instanceGridPosition = instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
     vec2 heightMapUV = vec2(instanceGridPosition.x / heightMapLength, instanceGridPosition.y / heightMapLength) + vec2(0.5, 0.5);
     float height = texture2D(heightMap, heightMapUV).x * 0.5; // TODO: scaling
 
-    instancePosition.z += height;
-    gl_Position = projectionMatrix * modelViewMatrix * instancePosition;
+    instanceGridPosition.z += height;
+
+    // Billboards
+    vec4 mvInstancePosition = modelViewMatrix * instanceGridPosition;
+    mvInstancePosition.xy += position.xy;
+
+    gl_Position = projectionMatrix * mvInstancePosition;
   }
 `;
 

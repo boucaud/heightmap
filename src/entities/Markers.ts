@@ -21,7 +21,7 @@ interface IEvent {
 }
 
 export class Markers extends Object3D {
-  pinScale = 0.1;
+  pinScale = 0.2;
   quad: PinQuad;
   lut: Lut;
   constructor() {
@@ -29,7 +29,7 @@ export class Markers extends Object3D {
 
     this.pinScale = userParameters.markerScale;
 
-    this.quad = new PinQuad(1.0);
+    this.quad = new PinQuad(this.pinScale);
     const dummy = new Object3D();
 
     // Lookup-table to get consistent colors for each group
@@ -62,7 +62,6 @@ export class Markers extends Object3D {
       mesh.instanceMatrix.setUsage(StaticDrawUsage);
       events.forEach((event: IEvent, index) => {
         // Compute the matrix for this instance
-        dummy.scale.set(this.pinScale, this.pinScale, this.pinScale);
         dummy.position.set(event.x, event.y, 0);
         dummy.rotation.x = Math.PI / 2;
         dummy.updateMatrix();
