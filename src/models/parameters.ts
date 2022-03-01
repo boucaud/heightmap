@@ -8,7 +8,7 @@ class Parameters {
   heightMapScaleFactor = 1.0;
   enableIsoLines = false;
   isoLineWidth = 1.0;
-  isoLineFrequency = 50.0;
+  isoLineFrequency = 20.0;
   isoLineColor: Color = new Color(0.8, 0.8, 1.0);
 
   groupLut: Lut = new Lut("rainbow", eventGroups.length);
