@@ -29,10 +29,10 @@ const fs = `
     // Very simplistic accumulation, range is fixed to [0,10]
     // With more time, use integer gl.RED texture then normalize
 
-    vec2 centerVector = gl_PointCoord - vec2(0.5 * heatMapRadius);
+    vec2 fragmentPointToCenterPoint = gl_PointCoord - vec2(0.5);
     gl_FragColor = vec4(0.05, 0.0, 0.0, 1.0);
     // We want circles, not squares TODO: fix
-    if (length(centerVector) > heatMapRadius * 0.7 ||  vTime < minTime || vTime > maxTime) {
+    if (length(fragmentPointToCenterPoint) > 0.5 ||  vTime < minTime || vTime > maxTime) {
       discard;
     }
   }
