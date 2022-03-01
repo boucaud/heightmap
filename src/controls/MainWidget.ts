@@ -16,7 +16,7 @@ export class MainWidget {
     // How much time values will change per frame
     animationIncrement: 0.01,
     animate: false,
-    disableMinAnimation: false,
+    disableMinAnimation: true,
   };
 
   constructor() {
@@ -74,7 +74,13 @@ export class MainWidget {
     pinFolder
       .add(this.animation, "animate")
       .listen()
-      .onChange(() => this.animate());
+      .onChange(() => {
+        // If we're only animating the max, reset it automatically
+        if (userParameters.maxTimeStamp >= 1.0 && this.animation.disableMinAnimation) {
+          userParameters.maxTimeStamp = 0.0;
+        }
+        this.animate()}
+      );
     pinFolder.add(this.animation, "disableMinAnimation");
     // TODO: lut
     mapFolder.open();
