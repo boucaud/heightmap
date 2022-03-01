@@ -12,11 +12,11 @@ class Parameters {
   isoLineColor: Color = new Color(0.8, 0.8, 1.0);
 
   groupLut: Lut = new Lut("rainbow", eventGroups.length);
-  markerScale = 0.5;
+  markerScale = 0.25;
 
   enableHeatMap = false;
-  heatMapRadius = 10.0;
-  heatMapRangeMax = 10.0;
+  heatMapRadius = 20.0;
+  heatMapRangeMax = 20.0;
 
   // Timestamps are normalized in the buffers, to avoid using int64 buffers
   // Ideally, gui values would not
