@@ -9,7 +9,11 @@ import { MainWidget } from "./controls/MainWidget";
 import { userParameters } from "./models/parameters";
 
 import { HeatMapRenderer } from "./PointCloudHeatMapRenderer";
+import { textures } from "./TextureManager";
 
+/**
+ * This class is responsible for creating and managing the scene
+ */
 export class SceneManager {
   private scene: Scene;
   private camera: PerspectiveCamera;
@@ -34,12 +38,16 @@ export class SceneManager {
     this.camera = this.buildCamera();
     this.renderer = this.buildRenderer();
     this.orbitControls = this.buildControls();
-
-    this.heatMapRenderer = new HeatMapRenderer(this.renderer);
+    this.heatMapRenderer = this.buildHeatMapRenderer();
 
     this.buildEntities();
     userParameters.subscribe(() => this.update());
-    this.update();
+  }
+
+  buildHeatMapRenderer() {
+    const heatMapRenderer = new HeatMapRenderer(this.renderer);
+    textures.heatMapTexture = heatMapRenderer.renderTarget.texture;
+    return heatMapRenderer;
   }
 
   buildScene() {
@@ -106,6 +114,9 @@ export class SceneManager {
     this.renderer.setSize(this.width, this.height);
   }
 
+  /**
+   * Draws the scene and the heatmap
+   */
   update() {
     this.heatMapRenderer.drawHeatMapTexture();
     this.renderer.render(this.scene, this.camera);

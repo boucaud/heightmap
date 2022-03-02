@@ -6,8 +6,8 @@ async function load() {
 }
 
 function start() {
+  // Create the canvas
   const canvas = document.createElement("canvas");
-
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   document.body.appendChild(canvas);
@@ -22,6 +22,7 @@ function start() {
   sceneManager.update();
 }
 
+// Load textures, then start
 load()
   .then(start)
   .catch((error: ErrorEvent) => {

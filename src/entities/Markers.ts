@@ -9,7 +9,6 @@ import {
 import { PinQuad } from "../geometries/PinQuad";
 import { BillboardMaterial } from "../materials/BillboardMaterial";
 
-// TODO: alias not working
 import eventGroups from "../../assets/position_events.json";
 import { userParameters } from "../models/parameters";
 import { Lut } from "three/examples/jsm/math/Lut";
@@ -20,10 +19,13 @@ interface IEvent {
   t: number;
 }
 
+/**
+ * Object3D that represents the markers.
+ * Markers are drawn as instanced quads with a billboard material
+ */
 export class Markers extends Object3D {
-  pinScale = 1.0;
-  quad: PinQuad;
-  lut: Lut;
+  private quad: PinQuad;
+  private lut: Lut;
   constructor() {
     super();
 
@@ -33,11 +35,13 @@ export class Markers extends Object3D {
     // Lookup-table to get consistent colors for each group
     this.lut = userParameters.groupLut;
 
-    // For each group, create a new instanced mesh with a specific color for each
+    // Denominator for normalizing times
     const inverted =
       1.0 /
       (userParameters.maxAvailableTimeStamp -
         userParameters.minAvailableTimeStamp);
+
+    // For each group, create a new instanced mesh with a specific color for each
     eventGroups.forEach((events: IEvent[], groupIndex) => {
       const instancedQuad = new InstancedBufferGeometry().copy(this.quad);
       const time = new Float32Array(events.length);
@@ -68,9 +72,5 @@ export class Markers extends Object3D {
       mesh.instanceMatrix.needsUpdate = true;
       this.add(mesh);
     });
-  }
-
-  update() {
-    // TODO: handle pinscale change, lut change
   }
 }

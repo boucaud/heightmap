@@ -1,19 +1,22 @@
 import { GUI, GUIController } from "dat.gui";
 import { userParameters } from "../models/parameters";
 
+/**
+ * Builds the dat.gui widget to control userParameters values
+ */
 export class MainWidget {
-  gui: GUI;
-  listeners: GUIController[] = [];
-  minTimeStampListener: GUIController;
-  maxTimeStampListener: GUIController;
+  private gui: GUI;
+  private listeners: GUIController[] = [];
+  private minTimeStampListener: GUIController;
+  private maxTimeStampListener: GUIController;
 
-  colors = {
+  private colors = {
     isoLineColor: userParameters.isoLineColor.getHex(),
     ambient: userParameters.ambientColor.getHex(),
     diffuse: userParameters.diffuseColor.getHex(),
   };
 
-  animation = {
+  private animation = {
     // How much time values will change per frame
     animationIncrement: 0.001,
     animate: false,
@@ -108,6 +111,7 @@ export class MainWidget {
     pinFolder.open();
     lightFolder.open();
 
+    // Listen to all controllers
     this.listeners.forEach((listener) =>
       listener.onChange(() => this.onChange())
     );
@@ -116,10 +120,12 @@ export class MainWidget {
   // Animate the timestamp window
   // Since we dont' have a render loop as only parameter changes trigger renders,
   // we can directly animate the parameters
-  animate() {
+  private animate() {
     if (this.animation.animate) {
       requestAnimationFrame(() => this.animate());
     }
+
+    // Animate: increment min timestamp
     if (!this.animation.disableMinAnimation) {
       userParameters.minTimeStamp += this.animation.animationIncrement;
       userParameters.minTimeStamp = Math.min(
@@ -128,8 +134,11 @@ export class MainWidget {
       );
     }
 
+    // Animate: increment max timestamp
     userParameters.maxTimeStamp += this.animation.animationIncrement;
     userParameters.maxTimeStamp = Math.min(1.0, userParameters.maxTimeStamp);
+
+    // Handle the end of the animation
     if (
       userParameters.maxTimeStamp >= 1.0 &&
       (userParameters.minTimeStamp >= userParameters.maxTimeStamp ||
@@ -137,12 +146,14 @@ export class MainWidget {
     ) {
       this.animation.animate = false;
     }
+
+    // Redraw sliders
     this.minTimeStampListener.updateDisplay();
     this.maxTimeStampListener.updateDisplay();
     this.onChange();
   }
 
-  onChange() {
+  private onChange() {
     // Make sure min stays below max
     if (userParameters.minTimeStamp > userParameters.maxTimeStamp) {
       userParameters.minTimeStamp = userParameters.maxTimeStamp;

@@ -10,6 +10,7 @@ import { textures } from "../TextureManager";
 
 import { userParameters } from "../models/parameters";
 import { Lut } from "three/examples/jsm/math/Lut";
+
 const vs = `
   precision highp float;
   varying vec2 vUV;
@@ -119,17 +120,23 @@ const fs = `
   }
 `;
 
-// TODO: RawShaderMaterial necessary to follow instructions to the letter ?
+/**
+ * Draws the heightmap on a grid
+ * Handles elevation from the heightmap texture
+ * Handles heatmap from the heatmap texture
+ * Handles isolines
+ * Applies phong shading
+ */
 export class HeightMapMaterial extends ShaderMaterial {
-  colorTexture: Texture;
-  heightMapTexture: Texture;
+  private colorTexture: Texture;
+  private heightMapTexture: Texture;
+
   constructor() {
     super({
       side: DoubleSide,
       fragmentShader: fs,
       vertexShader: vs,
     });
-    // If texture loading failed, the application would have aborted TODO: make this a bit cleaner
     this.colorTexture = textures.colorMapTexture as Texture;
     this.heightMapTexture = textures.heightMapTexture as Texture;
 

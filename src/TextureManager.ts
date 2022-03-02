@@ -4,7 +4,10 @@ import colormap from "assets/colormap.jpg";
 import heightmap from "assets/heightmap.jpg";
 import pin from "assets/pin.png";
 
-// A singleton to load textures before the scene is initialized
+/**
+ * A singleton to load textures before the scene is initialized
+ * Allows texture sharing across materials
+ */
 class TextureManager {
   colorMapTexture: Texture | null = null;
   heightMapTexture: Texture | null = null;

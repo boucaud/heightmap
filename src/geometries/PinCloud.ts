@@ -1,10 +1,13 @@
 import { BufferGeometry, Float32BufferAttribute } from "three";
 import { userParameters } from "../models/parameters";
 
+/**
+ * Builds a point cloud geometry from a list of {x y t} events
+ */
 export class PinCloud extends BufferGeometry {
   constructor(events: { x: number; y: number; t: number }[]) {
     super();
-    const geometry: Float32Array = new Float32Array(events.length * 3); // TODO: can be optimized
+    const geometry: Float32Array = new Float32Array(events.length * 3);
     const times: Float32Array = new Float32Array(events.length);
 
     const inverted =

@@ -9,15 +9,17 @@ import {
 import { PinCloud } from "./geometries/PinCloud";
 import eventGroups from "../assets/position_events.json";
 import { PointCloudHeatMapMaterial } from "./materials/PointCloudHeatMapMaterial";
-import { textures } from "./TextureManager";
 
+/**
+ * Renders the events as a 2D point cloud to an off-sceen texture using the heatmap material
+ */
 export class HeatMapRenderer {
-  scene: Scene;
-  pointCloud: PinCloud;
-  material: PointCloudHeatMapMaterial;
-  camera: OrthographicCamera;
-  points: Points;
-  renderer: WebGLRenderer;
+  private scene: Scene;
+  private pointCloud: PinCloud;
+  private material: PointCloudHeatMapMaterial;
+  private camera: OrthographicCamera;
+  private points: Points;
+  private renderer: WebGLRenderer;
   renderTarget: WebGLRenderTarget;
 
   constructor(renderer: WebGLRenderer) {
@@ -32,7 +34,6 @@ export class HeatMapRenderer {
       minFilter: LinearFilter,
       magFilter: LinearFilter,
     });
-    textures.heatMapTexture = this.renderTarget.texture;
   }
 
   drawHeatMapTexture() {

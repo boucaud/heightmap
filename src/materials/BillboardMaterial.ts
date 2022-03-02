@@ -3,9 +3,6 @@ import { userParameters } from "../models/parameters";
 
 import { textures } from "../TextureManager";
 
-// TODO: too much duplication
-// TODO: z on top of heightmap
-
 const vs = `
   attribute float time;
 
@@ -48,7 +45,7 @@ const fs = `
 
   void main() {
     vec4 textureColor = texture2D(pinTexture, vUV) * vec4(color.rgb, 1.0);
-    float alpha = textureColor.a; // Cheap way to avoid transparency issues TODO: investigate sorting instances or depth peeling ?
+    float alpha = textureColor.a; // Cheap way to avoid transparency issues
     gl_FragColor = vec4(textureColor.xyz, 1.0);
     if (alpha <= 0.4 || vTime < minTime || vTime > maxTime) {
       discard;
@@ -56,10 +53,14 @@ const fs = `
   }
 `;
 
-// TODO: RawShaderMaterial necessary to follow instructions to the letter ?
+/**
+ * Material to draw pins as billboards
+ * Handles pin height from the height texture
+ * Discards pins that are out of the time window
+ */
 export class BillboardMaterial extends ShaderMaterial {
-  pinTexture: Texture;
-  heightMapTexture: Texture;
+  private pinTexture: Texture;
+  private heightMapTexture: Texture;
 
   constructor(color: Color) {
     super({
@@ -68,14 +69,13 @@ export class BillboardMaterial extends ShaderMaterial {
       vertexShader: vs,
       transparent: true,
     });
-    // If texture loading failed, the application would have aborted TODO: make this a bit cleaner
     this.pinTexture = textures.pinTexture as Texture;
     this.heightMapTexture = textures.heightMapTexture as Texture;
     this.uniforms = {
       pinTexture: { value: this.pinTexture },
       scale: { value: userParameters.markerScale },
       heightMap: { value: this.heightMapTexture },
-      heightMapLength: { value: userParameters.gridLength * 2 }, // TODO:
+      heightMapLength: { value: userParameters.gridLength * 2 },
       color: { value: color },
       minTime: { value: userParameters.minTimeStamp },
       maxTime: { value: userParameters.maxTimeStamp },

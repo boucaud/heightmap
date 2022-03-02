@@ -35,6 +35,11 @@ const fs = `
   }
 `;
 
+/**
+ * Uses additive blending to draw a heatmap from a point cloud
+ * Values in the red channel
+ * Filters points with the time window
+ */
 export class PointCloudHeatMapMaterial extends ShaderMaterial {
   constructor() {
     super({

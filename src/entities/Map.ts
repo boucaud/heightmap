@@ -4,10 +4,13 @@ import { HeightMapMaterial } from "../materials/HeightMapMaterial";
 import { Grid } from "../geometries/Grid";
 import { userParameters } from "../models/parameters";
 
+/**
+ * Objets3D that represents the map
+ */
 export class Map extends Object3D {
-  grid: Grid;
-  material: HeightMapMaterial;
-  mapResolution: number;
+  private grid: Grid;
+  private material: HeightMapMaterial;
+  private mapResolution: number;
   mesh: Mesh;
 
   constructor() {
@@ -20,7 +23,6 @@ export class Map extends Object3D {
     userParameters.subscribe(() => this.update());
   }
 
-  // TODO: throttle
   update() {
     // Replace the grid if resolution changed
     if (this.mapResolution != userParameters.mapResolution) {
