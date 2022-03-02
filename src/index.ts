@@ -19,7 +19,7 @@ function start() {
   window.onresize = () => sceneManager.onResize();
 
   // Trigger the first render
-  sceneManager.update();
+  sceneManager.update(true);
 }
 
 // Load textures, then start

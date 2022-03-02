@@ -41,7 +41,7 @@ export class SceneManager {
     this.heatMapRenderer = this.buildHeatMapRenderer();
 
     this.buildEntities();
-    userParameters.subscribe(() => this.update());
+    userParameters.subscribe(() => this.update(true));
   }
 
   buildHeatMapRenderer() {
@@ -117,8 +117,10 @@ export class SceneManager {
   /**
    * Draws the scene and the heatmap
    */
-  update() {
-    this.heatMapRenderer.drawHeatMapTexture();
+  update(redrawHeatMap = false) {
+    if (redrawHeatMap) {
+      this.heatMapRenderer.drawHeatMapTexture();
+    }
     this.renderer.render(this.scene, this.camera);
   }
 }
