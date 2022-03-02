@@ -1,3 +1,50 @@
+# Notes Adrien
+
+## How to use
+
+  * For a quick demo, visit [This Page](https://ubi.boucaud.dev/)
+  * To build the project, you need node/npm (this was tested on v16.14.0 LTS)
+  * Quick test: `npm run serve` then visit [localhost:8080](localhost:8080)
+  * Build for prod: `npm run build`. Then serve the dist folder with any http server (ex: `python -m http.server`)
+
+## Camera controls
+
+  * Rotate: left click + move the mouse
+  * Pan: shift + left click + move the mouse
+  * Zoom in/out: Mousewheel in/out
+
+## Short description
+
+### Map
+
+The map is drawn as a flat triangle grid, then elevated in the fragment shader.
+
+### Isolines
+
+You can draw isometric (contour) lines around the map. It is possible to control line frequency, width and color.
+
+### Heatmap
+
+A heatmap is drawn on the map based on how many markers are located within a radius of every sample.
+
+You can control that radius, as well as the colormap range (how many markers for the map to be red).
+
+The heatmap is first drawn into an off-screen texture using additive blending and a point cloud, then that texture is painted onto the map.
+
+### Markers
+
+Markers are instanced quads drawns as billboards. You can control a time window in the gui that will filter out markers based on their timestamps.
+
+The animate button will increment time window values until they are maxed out.
+
+You can also control the marker scale.
+
+### Lighting
+
+The map is shaded using a single (Phong) light, you can control its colors, rotation and distance from the y axis
+
+
+
 # Technical Test for 3D Programmer of DNA-Viewer
 
 We would like to further learn about your capability and potentials in 3D rendering. And the best way we believe is to see your work. In this test, you are expected to build a simple web application that visualizes the provided tracking data. You are free to choose the technologies you prefer, but we recommend you to use [three.js](https://threejs.org/), which aligns with our current technical stack the best.
