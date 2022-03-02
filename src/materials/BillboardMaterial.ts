@@ -10,7 +10,7 @@ const vs = `
   varying vec2 vUV;
 
   uniform sampler2D heightMap;
-  uniform float heightMapLength;
+  uniform float heightMapIncrement;
   uniform float heightScaleFactor;
 
   uniform float scale;
@@ -21,7 +21,7 @@ const vs = `
 
     // Compute pin position on the grid, then deduct height map UVs
     vec4 instanceGridPosition = instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
-    vec2 heightMapUV = vec2(instanceGridPosition.x / heightMapLength, instanceGridPosition.y / heightMapLength) + vec2(0.5, 0.5);
+    vec2 heightMapUV = vec2(instanceGridPosition.x * heightMapIncrement, instanceGridPosition.y * heightMapIncrement) + vec2(0.5, 0.5);
     float height = texture2D(heightMap, heightMapUV).x * heightScaleFactor;
 
     instanceGridPosition.z += height;
@@ -75,7 +75,7 @@ export class BillboardMaterial extends ShaderMaterial {
       pinTexture: { value: this.pinTexture },
       scale: { value: userParameters.markerScale },
       heightMap: { value: this.heightMapTexture },
-      heightMapLength: { value: userParameters.gridLength * 2 },
+      heightMapIncrement: { value: 1.0 / (userParameters.gridLength * 2) },
       color: { value: color },
       minTime: { value: userParameters.minTimeStamp },
       maxTime: { value: userParameters.maxTimeStamp },

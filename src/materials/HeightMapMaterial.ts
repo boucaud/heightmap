@@ -15,7 +15,7 @@ const vs = `
   precision highp float;
   varying vec2 vUV;
   varying float height;
-  uniform float gridLength;
+  uniform float gridLengthInverse;
   uniform sampler2D heightMap;
   uniform float heightScaleFactor;
 
@@ -24,14 +24,14 @@ const vs = `
   varying vec3 vLightVector;
   varying vec3 vViewVector;
 
+  const float epsilon = 1280.0 / 32.0;
   void main() {
-    vUV = vec2(position.x / gridLength, position.y / gridLength) + vec2(0.5, 0.5);
+    vUV = vec2(position.x * gridLengthInverse, position.y * gridLengthInverse) + vec2(0.5, 0.5);
     height = texture(heightMap, vUV).x * heightScaleFactor;
     vec4 bumpedPosition = vec4(position.xy, height, 1.0);
 
-    // Normal in view space TODO: lots of optimizations to do
+    // Normal in view space
     const ivec3 offsets = ivec3 (-1, 0, 1);
-    float epsilon = 32.0 / 1280.0;
     // Sample heights in an ABCD square around us
     //     D
     //  A  P  C
@@ -40,7 +40,7 @@ const vs = `
     float heightB = textureOffset(heightMap, vUV, offsets.yx).x * heightScaleFactor;
     float heightC = textureOffset(heightMap, vUV, offsets.zy).x * heightScaleFactor;
     float heightD = textureOffset(heightMap, vUV, offsets.yz).x * heightScaleFactor;
-    vec3 bumpedNormal = vec3((heightA - heightB) / epsilon, (heightB - heightD) / epsilon, 1.0);
+    vec3 bumpedNormal = vec3((heightA - heightB) * epsilon, (heightB - heightD) * epsilon, 1.0);
     vNormal = normalMatrix * normalize(bumpedNormal);
 
     vec4 mvPosition = modelViewMatrix * bumpedPosition;
@@ -59,7 +59,6 @@ const fs = `
 
   varying vec2 vUV;
   varying float height;
-  uniform float gridLength;
   uniform sampler2D colorMap;
   uniform sampler2D lutTexture;
   uniform sampler2D heatMapTexture;
@@ -141,7 +140,7 @@ export class HeightMapMaterial extends ShaderMaterial {
     this.heightMapTexture = textures.heightMapTexture as Texture;
 
     const uniforms = {
-      gridLength: { value: userParameters.gridLength * 2 },
+      gridLengthInverse: { value: 1.0 / (userParameters.gridLength * 2) },
       colorMap: { value: this.colorTexture },
       heightMap: { value: this.heightMapTexture },
       heightScaleFactor: { value: userParameters.heightMapScaleFactor },
@@ -179,7 +178,8 @@ export class HeightMapMaterial extends ShaderMaterial {
   }
 
   updateUniforms() {
-    this.uniforms.gridLength.value = userParameters.gridLength * 2;
+    this.uniforms.gridLengthInverse.value =
+      1.0 / (userParameters.gridLength * 2);
     this.uniforms.heightScaleFactor.value = userParameters.heightMapScaleFactor;
     this.uniforms.enableIsoLines.value = userParameters.enableIsoLines;
     this.uniforms.isoLineWidth.value = userParameters.isoLineWidth;

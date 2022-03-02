@@ -9,9 +9,11 @@ const vs = `
 
   varying float vTime;
 
+  const float denominator = 1.0 / 16.0;
+
   void main() {
     vTime = time;
-    gl_Position = vec4(position / 16., 1.0);
+    gl_Position = vec4(position * denominator, 1.0);
     gl_PointSize = heatMapRadius;
   }
 `;
